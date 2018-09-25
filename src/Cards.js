@@ -19,7 +19,7 @@ class SwipeCards extends Component {
   removeCard (side, cardId) {
     const { children, onEnd } = this.props
     setTimeout(() => this.setState({ [`alert${side}`]: false }), 300)
-    
+
     if (children.length === (this.state.index + 1) && onEnd) onEnd()
 
     this.setState({
@@ -27,7 +27,7 @@ class SwipeCards extends Component {
       [`alert${side}`]: true
     })
   }
-  
+
   componentDidMount () {
     this.setSize()
     window.addEventListener('resize', this.setSize)
@@ -53,19 +53,19 @@ class SwipeCards extends Component {
     const _cards = children.reduce((memo, c, i) => {
       if (index > i) return memo
       const props = {
+        ...DIRECTIONS.reduce((m, d) =>
+          ({ ...m, [`onOutScreen${d}`]: () => this.removeCard(d) }), {}),
         key: i,
         containerSize,
         index: children.length - index,
-        ...DIRECTIONS.reduce((m, d) => 
-          ({ ...m, [`onOutScreen${d}`]: () => this.removeCard(d) }), {}),
         active: index === i
       }
       return [ cloneElement(c, props), ...memo ]
     }, [])
-    
+
     return (
       <div className={className}>
-        {DIRECTIONS.map(d => 
+        {DIRECTIONS.map(d =>
           <div key={d} className={`${this.state[`alert${d}`] ? 'alert-visible': ''} alert-${d.toLowerCase()} alert`}>
             {this.props[`alert${d}`]}
           </div>
